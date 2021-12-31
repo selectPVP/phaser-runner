@@ -63,10 +63,21 @@ export class Start extends Phaser.Scene {
       }
     );
 
-    // this.physics.add.sprite(
-    //   100,
-    //   200,
-    //   TextureKeys.Platform
-    // );
+    const test_sprite_run = this.physics.add.sprite(
+      100,
+      200,
+      "hero_run"
+    );
+    test_sprite_run.anims.create({key: "run"});
+    console.log("test_sprite_run", test_sprite_run);
+    // test_sprite_run.anims.play("run");
+    // this.add.tween(test_sprite);
+
+    const test_sprite_jump = this.physics.add.sprite(
+      200,
+      200,
+      "hero_jump"
+    );
+    test_sprite_jump.anims.create({key: "jump"});
   }
 }
