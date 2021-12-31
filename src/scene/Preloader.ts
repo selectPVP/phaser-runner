@@ -47,9 +47,10 @@ export class Preloader extends Phaser.Scene {
       url: hero_run_url,
       frameConfig: {
         frameWidth: 32,
+        startFrame: 0,
+        endFrame: -1
       },
     });
-
   }
 
   create() {
