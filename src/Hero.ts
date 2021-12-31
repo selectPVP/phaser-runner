@@ -55,7 +55,7 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
     if (this.sprite.body.touching.down) {
       this.sprite.play("run", true);
     } else {
-      if (this.jumpsUsed > 1) {
+      if (this.jumpsUsed > 1 && this.sprite.body.velocity.y < 0) {
         this.sprite.play("jump_double", true);
       } else {
         this.sprite.play("jump", true);
