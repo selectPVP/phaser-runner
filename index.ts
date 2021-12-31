@@ -1,4 +1,5 @@
-import Phaser from 'phaser';
+// import Phaser from 'phaser';
+import $ from 'phaser';
 
 import { Preloader } from './src/scene/Preloader';
 import { Start } from './src/scene/Start';
