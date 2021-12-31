@@ -69,7 +69,7 @@ export class Start extends Phaser.Scene {
       "hero_run"
     );
     test_sprite_run.anims.create({key: "run"});
-    console.log("test_sprite_run", test_sprite_run);
+    // console.log("test_sprite_run", test_sprite_run);
     // test_sprite_run.anims.play("run");
     // this.add.tween(test_sprite);
 
