@@ -1,4 +1,4 @@
-import { TextureKeys } from './enums';
+import { TextureKeys } from "./enums";
 
 export class Hero extends Phaser.Physics.Arcade.Sprite {
   gravity: number = 900;
@@ -11,12 +11,31 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene,
     x: number,
     y: number,
-    texture = TextureKeys.Chick
+    // texture = TextureKeys.Chick
+    texture = "hero_run"
   ) {
     super(scene, x, y, texture);
     this.sprite = this.scene.physics.add.sprite(x, y, texture);
+    this.sprite.anims.create({
+      key: "run",
+      frames: this.sprite.anims.generateFrameNumbers("hero_run", {}),
+      frameRate: 20,
+      repeat: -1,
+    });
+    this.sprite.anims.create({
+      key: "jump",
+      frames: this.sprite.anims.generateFrameNumbers("hero_jump", {}),
+      frameRate: 20,
+      repeat: -1,
+    });
+    this.sprite.anims.create({
+      key: "jump_double",
+      frames: this.sprite.anims.generateFrameNumbers("hero_jump_double", {}),
+      frameRate: 20,
+      repeat: -1,
+    });
     this.sprite.setGravityY(this.gravity);
-    this.scene.input.on('pointerdown', this.jump, this);
+    this.scene.input.on("pointerdown", this.jump, this);
   }
 
   jump() {
@@ -29,6 +48,18 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
       }
       this.sprite.setVelocityY(this.jumpForce * -1);
       this.jumpsUsed++;
+    }
+  }
+
+  handleAnimation() {
+    if (this.sprite.body.touching.down) {
+      this.sprite.play("run", true);
+    } else {
+      if (this.jumpsUsed > 1) {
+        this.sprite.play("jump_double", true);
+      } else {
+        this.sprite.play("jump", true);
+      }
     }
   }
 }
