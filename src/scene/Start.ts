@@ -63,11 +63,5 @@ export class Start extends Phaser.Scene {
         fixedWidth: <number>this.game.config.width,
       }
     );
-
-    // const test_sprite = new TestSprite(
-    //   this,
-    //   100,
-    //   200
-    // );
   }
 }

@@ -1,5 +1,4 @@
 import { TextureKeys, SceneKeys } from "../enums";
-import { demoTextures } from "../texture/demo";
 import { platformTextures } from "../texture/platform";
 
 const url_sprite_hero_run = require("../../static/hero_run.png");
@@ -20,22 +19,6 @@ export class Preloader extends Phaser.Scene {
       palette: palette,
     });
 
-    // this.textures.generate(TextureKeys.Chick, {
-    //   data: demoTextures.chick,
-    //   pixelWidth: pixelSize,
-    //   palette: palette,
-    // });
-    // this.textures.generate(TextureKeys.Bird, {
-    //   data: demoTextures.bird,
-    //   pixelWidth: pixelSize,
-    //   palette: palette,
-    // });
-    // this.textures.generate(TextureKeys.Cat, {
-    //   data: demoTextures.cat,
-    //   pixelWidth: pixelSize,
-    //   palette: palette,
-    // });
-
     this.load.spritesheet({
       key: "hero_jump",
       url: url_sprite_hero_jump,
@@ -43,7 +26,6 @@ export class Preloader extends Phaser.Scene {
         frameWidth: 32,
       },
     });
-
     this.load.spritesheet({
       key: "hero_jump_double",
       url: url_sprite_hero_jump_double,
@@ -51,7 +33,6 @@ export class Preloader extends Phaser.Scene {
         frameWidth: 32,
       },
     });
-
     this.load.spritesheet({
       key: "hero_run",
       url: url_sprite_hero_run,
