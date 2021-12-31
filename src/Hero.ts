@@ -1,8 +1,8 @@
 import { TextureKeys } from "./enums";
 
 export class Hero extends Phaser.Physics.Arcade.Sprite {
-  gravity: number = 900;
-  jumpForce: number = 400;
+  gravity: number = 800;
+  jumpForce: number = 500;
   jumpsAllowed: number = 2;
   jumpsUsed: number = 0;
   sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -11,7 +11,6 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene,
     x: number,
     y: number,
-    // texture = TextureKeys.Chick
     texture = "hero_run"
   ) {
     super(scene, x, y, texture);

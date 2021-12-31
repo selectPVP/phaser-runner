@@ -4,7 +4,9 @@ import { Preloader } from './src/scene/Preloader';
 import { Start } from './src/scene/Start';
 import { Runner } from './src/scene/Runner';
 
-const square_size: number = 320
+document.getElementById("game")?.replaceChildren();
+
+const square_size: number = Math.min(window.innerHeight, window.innerWidth) * 0.9;
 
 const runnerConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
