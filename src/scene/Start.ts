@@ -1,4 +1,5 @@
 import { TextureKeys, SceneKeys } from '../enums';
+import { TestSprite } from '../TestSprite';
 
 interface StartData {
   score?: number;
@@ -8,7 +9,7 @@ interface StartData {
 
 export class Start extends Phaser.Scene {
   startData: StartData;
-  previousScore: number;
+  previousScore: number | undefined;
   titleText: string;
   buttonText: string;
   title: Phaser.GameObjects.Text;
@@ -63,21 +64,10 @@ export class Start extends Phaser.Scene {
       }
     );
 
-    const test_sprite_run = this.physics.add.sprite(
-      100,
-      200,
-      "hero_run"
-    );
-    test_sprite_run.anims.create({key: "run"});
-    // console.log("test_sprite_run", test_sprite_run);
-    // test_sprite_run.anims.play("run");
-    // this.add.tween(test_sprite);
-
-    const test_sprite_jump = this.physics.add.sprite(
-      200,
-      200,
-      "hero_jump"
-    );
-    test_sprite_jump.anims.create({key: "jump"});
+    // const test_sprite = new TestSprite(
+    //   this,
+    //   100,
+    //   200
+    // );
   }
 }

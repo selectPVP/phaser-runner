@@ -54,6 +54,7 @@ export class Runner extends Phaser.Scene {
       this.scoreText = `Score: ${this.score}`;
       this.scoreBoard.setText(this.scoreText);
       this.platformHandler.cleanUp(<number>this.game.config.width);
+      this.hero.handleAnimation();
     }
   }
 }
