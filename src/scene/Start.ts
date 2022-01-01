@@ -10,6 +10,7 @@ interface StartData {
 export class Start extends Phaser.Scene {
   startData: StartData;
   previousScore: number | undefined;
+  textSize: number;
   titleText: string;
   buttonText: string;
   title: Phaser.GameObjects.Text;
@@ -21,6 +22,7 @@ export class Start extends Phaser.Scene {
   }
 
   create() {
+    this.textSize = Math.max(16, Math.round(<number>this.game.config.width / 20));
     this.startData = this.scene.settings.data;
     this.previousScore = this.startData?.score;
     this.titleText = this.startData?.titleText || 'wtf';
@@ -35,6 +37,7 @@ export class Start extends Phaser.Scene {
       {
         color: '#ff00ff',
         align: 'center',
+        fontSize: `${this.textSize}px`,
         fixedWidth: <number>this.game.config.width,
       }
     );
@@ -45,6 +48,7 @@ export class Start extends Phaser.Scene {
       {
         color: '#fff',
         align: 'center',
+        fontSize: `${this.textSize}px`,
         fixedWidth: <number>this.game.config.width,
       }
     );
@@ -60,6 +64,7 @@ export class Start extends Phaser.Scene {
       {
         color: '#0f0',
         align: 'center',
+        fontSize: `${this.textSize}px`,
         fixedWidth: <number>this.game.config.width,
       }
     );

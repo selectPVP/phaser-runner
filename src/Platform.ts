@@ -55,6 +55,11 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
   }
 
   spawn(x: number, y: number, width: number) {
+    // notes
+    //   the longer a player stays in:
+    //     + platform x/y distance 
+    //       (figure out high/low tolerance limits)
+    //     + speed
     const platform = new Platform(this.scene, x, y, this.texture, width);
     this.add(platform.sprite);
     this.nextPlatformXDistance = Phaser.Math.Between(
@@ -71,15 +76,15 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     const yUpOk = yUp >= this.platformYPositionMin;
     const yDownOk = yUp <= this.platformYPositionMax;
     const nextPlatformYPosition = yUpOk ? yUp : yDown;
-    console.log("platform", {
-      currentPlatformY: currentPlatformY,
-      nextPlatformYDistance: nextPlatformYDistance,
-      yUp: yUp,
-      yDown: yDown,
-      yUpOk: yUpOk,
-      yDownOk: yDownOk,
-      nextPlatformYPosition: nextPlatformYPosition
-    });
+    // console.log("platform", {
+    //   currentPlatformY: currentPlatformY,
+    //   nextPlatformYDistance: nextPlatformYDistance,
+    //   yUp: yUp,
+    //   yDown: yDown,
+    //   yUpOk: yUpOk,
+    //   yDownOk: yDownOk,
+    //   nextPlatformYPosition: nextPlatformYPosition
+    // });
     this.nextPlatformYPosition = nextPlatformYPosition;
   }
 
