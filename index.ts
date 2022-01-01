@@ -16,10 +16,12 @@ const runnerConfig: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "arcade",
   },
-  // parent: "game",
+  parent: "game",
   scale: {
     parent: "game",
     mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    autoRound: true,
     // width: 800,
     // height: 600,
   },
