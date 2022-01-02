@@ -1,25 +1,5 @@
 import { TextureKeys } from "./enums";
 
-export class Platform extends Phaser.Physics.Arcade.Sprite {
-  sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-
-  constructor(
-    scene: Phaser.Scene,
-    x: number,
-    y: number,
-    texture: string,
-    width: number,
-    startSpeed: number
-  ) {
-    super(scene, x, y, texture);
-    this.sprite = this.scene.physics.add.sprite(x, y, texture);
-    this.sprite.setImmovable(true);
-    this.sprite.setVelocityX(-startSpeed);
-    this.sprite.setFrictionX(0);
-    this.sprite.displayWidth = width;
-  }
-}
-
 interface Range {
   min: number;
   max: number;
@@ -72,15 +52,12 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     //   the longer a player stays in:
     //     + platform x/y distance
     //       (figure out high/low tolerance limits)
-    const platform = new Platform(
-      this.scene,
-      x,
-      y,
-      this.texture,
-      width,
-      this.currentSpeed
-    );
-    this.add(platform.sprite);
+    const platformSprite = this.scene.physics.add.sprite(x, y, this.texture);
+    platformSprite.setImmovable(true);
+    platformSprite.setVelocityX(-this.currentSpeed);
+    platformSprite.setFrictionX(0);
+    platformSprite.displayWidth = width;
+    this.add(platformSprite);
     // x distance between platforms should depend on the current speed and the
     // time hero sprite takes to complete a jump (return to initial y position)
     this.nextPlatformXDistance = Phaser.Math.Between(
@@ -143,7 +120,7 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
       (sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) => ({
         x: sprite.x,
         displayWidth: sprite.displayWidth,
-        xRightEdge: sprite.x + (sprite.displayWidth * 2)
+        xRightEdge: sprite.x + sprite.displayWidth * 2,
       })
     );
     // why tho
