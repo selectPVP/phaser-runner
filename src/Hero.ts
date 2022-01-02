@@ -1,9 +1,11 @@
 import { TextureKeys } from "./enums";
 
 export class Hero extends Phaser.Physics.Arcade.Sprite {
-  gravity: number = 800;
-  jumpForce: number = 500;
-  jumpsAllowed: number = 2;
+  gravity: number;
+  jumpForce: number;
+  jumpHeight: number; // max pixels above initial y position
+  jumpTime: number; // seconds to return to initial y position
+  jumpsAllowed: number;
   jumpsUsed: number = 0;
   sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
@@ -11,9 +13,15 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene,
     x: number,
     y: number,
+    gravity: number,
+    jumpForce: number,
+    jumpsAllowed: number,
     texture = "hero_run"
   ) {
     super(scene, x, y, texture);
+    this.gravity = gravity;
+    this.jumpForce = jumpForce;
+    this.jumpsAllowed = jumpsAllowed;
     this.sprite = this.scene.physics.add.sprite(x, y, texture);
     this.sprite.setDebug(true, true, 255)
     this.sprite.anims.create({
@@ -36,6 +44,14 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
     });
     this.sprite.setGravityY(this.gravity);
     this.scene.input.on("pointerdown", this.jump, this);
+    this.calculateJumpParameters();
+  }
+
+  calculateJumpParameters() {
+    const timeToPeak = this.jumpForce / this.gravity;
+    this.jumpHeight =
+    this.jumpForce * timeToPeak - (this.gravity * Math.pow(timeToPeak, 2)) / 2;
+    this.jumpTime = 2 * timeToPeak;
   }
 
   jump() {
@@ -46,8 +62,7 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
       if (this.sprite.body.touching.down) {
         this.jumpsUsed = 0;
       }
-      console.log("jump", this.sprite.y);
-      this.sprite.setVelocityY(this.jumpForce * -1);
+      this.sprite.setVelocityY(0 - this.jumpForce);
       this.jumpsUsed++;
     }
   }

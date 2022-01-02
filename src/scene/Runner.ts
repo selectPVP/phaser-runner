@@ -10,7 +10,9 @@ export class Runner extends Phaser.Scene {
   score: number = 0;
   scoreText: string;
   scoreBoard: Phaser.GameObjects.Text;
-  
+  gravity: number = 800;
+  jumpForce: number = 500;
+  jumpsAllowed: number = 2;
   platformHandler: PlatformHandler;
   hero: Hero;
 
@@ -24,19 +26,25 @@ export class Runner extends Phaser.Scene {
     this.scoreBoard = this.add.text(5, 5, this.scoreText, {
       color: '#0f0',
     });
+    this.hero = new Hero(
+      this,
+      <number>this.game.config.width / 3,
+      <number>this.game.config.height / 2,
+      this.gravity,
+      this.jumpForce,
+      this.jumpsAllowed
+    );
     this.platformHandler = new PlatformHandler(
       this,
-      <number>this.game.config.width
+      // <number>this.game.config.width,
+      this.hero.sprite.height,
+      this.hero.jumpHeight,
+      this.hero.jumpTime
     );
     this.platformHandler.spawn(
       <number>this.game.config.width,
       <number>this.game.config.height * 0.8,
       <number>this.game.config.width
-    );
-    this.hero = new Hero(
-      this,
-      <number>this.game.config.width / 3,
-      <number>this.game.config.height / 2
     );
     this.physics.add.collider(this.hero.sprite, this.platformHandler);
   }
