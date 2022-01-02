@@ -95,6 +95,8 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     const nextPlatformYPosition = yUpOk ? yUp : yDown;
 
     // new method, not ready yet 
+    // do this before adding the sprite to get the y position
+    // once ready we can remove x from the spawn() call
     // console.log("platformYPosition", this.calculatePlatformYPosition());
 
     // console.log("platform", {
