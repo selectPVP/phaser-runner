@@ -10,6 +10,7 @@ export class Runner extends Phaser.Scene {
   score: number = 0;
   scoreText: string;
   scoreBoard: Phaser.GameObjects.Text;
+  
   platformHandler: PlatformHandler;
   hero: Hero;
 
@@ -53,7 +54,7 @@ export class Runner extends Phaser.Scene {
       this.score = this.timer + this.bonus;
       this.scoreText = `Score: ${this.score}`;
       this.scoreBoard.setText(this.scoreText);
-      this.platformHandler.cleanUp(<number>this.game.config.width);
+      this.platformHandler.update(this.timer);
       this.hero.handleAnimation();
     }
   }

@@ -1,7 +1,6 @@
-import { TextureKeys } from './enums';
+import { TextureKeys } from "./enums";
 
 export class Platform extends Phaser.Physics.Arcade.Sprite {
-  startSpeed: number = 350;
   sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   constructor(
@@ -9,12 +8,13 @@ export class Platform extends Phaser.Physics.Arcade.Sprite {
     x: number,
     y: number,
     texture: string,
-    width: number
+    width: number,
+    startSpeed: number
   ) {
     super(scene, x, y, texture);
     this.sprite = this.scene.physics.add.sprite(x, y, texture);
     this.sprite.setImmovable(true);
-    this.sprite.setVelocityX(this.startSpeed * -1);
+    this.sprite.setVelocityX(startSpeed);
     this.sprite.setFrictionX(0);
     this.sprite.displayWidth = width;
   }
@@ -26,6 +26,8 @@ interface Range {
 }
 
 export class PlatformHandler extends Phaser.GameObjects.Group {
+  startSpeed: number = 200;
+  currentSpeed: number;
   texture = TextureKeys.Platform;
   platformWidthRange: Range = {
     min: 50,
@@ -35,32 +37,41 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     min: 50,
     max: 200,
   };
-  platformYRange: Range = {
-    min: 80,
-    max: 200,
-  };
+  platformYPositionRange: Range;
 
   nextPlatformXDistance: number;
   platformYPositionBuffer: number;
-  platformYPositionMax: number;
-  platformYPositionMin: number;
+  // platformYPositionMax: number;
+  // platformYPositionMin: number;
   nextPlatformYPosition: number;
 
   constructor(scene: Phaser.Scene, minDistance: number) {
     super(scene);
+    this.currentSpeed = 0 - this.startSpeed;
     this.platformYPositionBuffer = <number>this.scene.game.config.height * 0.2;
-    this.platformYPositionMin = this.platformYPositionBuffer;
-    this.platformYPositionMax = <number>this.scene.game.config.height - this.platformYPositionBuffer;
-    this.nextPlatformYPosition = this.platformYPositionMax;
+    this.platformYPositionRange = {
+      min: this.platformYPositionBuffer,
+      max: <number>this.scene.game.config.height - this.platformYPositionBuffer,
+    };
+    // this.platformYPositionMin = this.platformYPositionBuffer;
+    // this.platformYPositionMax =
+    //   <number>this.scene.game.config.height - this.platformYPositionBuffer;
+    this.nextPlatformYPosition = this.platformYPositionRange.max;
   }
 
   spawn(x: number, y: number, width: number) {
     // notes
     //   the longer a player stays in:
-    //     + platform x/y distance 
+    //     + platform x/y distance
     //       (figure out high/low tolerance limits)
-    //     + speed
-    const platform = new Platform(this.scene, x, y, this.texture, width);
+    const platform = new Platform(
+      this.scene,
+      x,
+      y,
+      this.texture,
+      width,
+      this.currentSpeed
+    );
     this.add(platform.sprite);
     this.nextPlatformXDistance = Phaser.Math.Between(
       this.platformXDistanceRange.min,
@@ -68,27 +79,29 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     );
     const currentPlatformY = this.nextPlatformYPosition;
     const nextPlatformYDistance = Phaser.Math.Between(
-      this.platformYRange.min,
-      this.platformYRange.max
+      this.platformYPositionRange.min,
+      this.platformYPositionRange.max
     );
     const yUp = currentPlatformY - nextPlatformYDistance;
     const yDown = currentPlatformY + nextPlatformYDistance;
-    const yUpOk = yUp >= this.platformYPositionMin;
-    const yDownOk = yUp <= this.platformYPositionMax;
+    const yUpOk = yUp >= this.platformYPositionRange.min;
+    const yDownOk = yUp <= this.platformYPositionRange.max;
     const nextPlatformYPosition = yUpOk ? yUp : yDown;
-    // console.log("platform", {
-    //   currentPlatformY: currentPlatformY,
-    //   nextPlatformYDistance: nextPlatformYDistance,
-    //   yUp: yUp,
-    //   yDown: yDown,
-    //   yUpOk: yUpOk,
-    //   yDownOk: yDownOk,
-    //   nextPlatformYPosition: nextPlatformYPosition
-    // });
+    console.log("platform", {
+      currentPlatformY: currentPlatformY,
+      nextPlatformYDistance: nextPlatformYDistance,
+      yUp: yUp,
+      yDown: yDown,
+      yUpOk: yUpOk,
+      yDownOk: yDownOk,
+      nextPlatformYPosition: nextPlatformYPosition
+    });
     this.nextPlatformYPosition = nextPlatformYPosition;
   }
 
-  cleanUp(minDistance: number) {
+  update(timer: number) {
+    let minDistance: number = <number>this.scene.game.config.width;
+    this.currentSpeed = 0 - this.startSpeed - timer;
     this.getChildren().forEach(function (
       sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
     ) {
@@ -98,6 +111,8 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
       if (sprite.x < -sprite.displayWidth) {
         this.killAndHide(sprite);
         this.remove(sprite);
+      } else {
+        sprite.setVelocityX(this.currentSpeed);
       }
     },
     this);

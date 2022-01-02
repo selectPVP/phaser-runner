@@ -15,6 +15,7 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
   ) {
     super(scene, x, y, texture);
     this.sprite = this.scene.physics.add.sprite(x, y, texture);
+    this.sprite.setDebug(true, true, 255)
     this.sprite.anims.create({
       key: "run",
       frames: this.sprite.anims.generateFrameNumbers("hero_run", {}),
@@ -45,12 +46,16 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
       if (this.sprite.body.touching.down) {
         this.jumpsUsed = 0;
       }
+      console.log("jump", this.sprite.y);
       this.sprite.setVelocityY(this.jumpForce * -1);
       this.jumpsUsed++;
     }
   }
 
   handleAnimation() {
+    if (this.sprite.body.velocity.y < 0) {
+      // console.log("this.sprite.y", this.sprite.y);
+    }
     if (this.sprite.body.touching.down) {
       this.sprite.play("run", true);
     } else {
