@@ -25,10 +25,11 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
 
   nextPlatformXDistance: number;
   nextPlatformYPosition: number;
+  prevPlatformYPosition: number;
 
+  // there's still something not quite right about how y positions are determined
   constructor(
     scene: Phaser.Scene,
-    // minDistance: number,
     heroSpriteHeight: number,
     heroJumpHeight: number,
     heroJumpTime: number
@@ -42,16 +43,30 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     this.platformYPositionRange = {
       min: this.heroSpriteHeight * 2,
       // change this to game height - platform height, probably
-      max: <number>this.scene.game.config.height * 0.8,
+      max: <number>this.scene.game.config.height - 50,
     };
     this.nextPlatformYPosition = this.platformYPositionRange.max;
   }
 
+  calculatePlatformYPosition() {
+    // TODO: make sure this.prevPlatformYPosition is set before method is called
+    const nextPlatformYDistance = Phaser.Math.Between(
+      this.heroSpriteHeight * 2,
+      this.heroJumpHeight * 1.5
+    );
+    const yUp = this.prevPlatformYPosition - nextPlatformYDistance;
+    const yDown = this.prevPlatformYPosition + nextPlatformYDistance;
+    const yUpOk = yUp >= this.platformYPositionRange.min;
+    const yDownOk = yDown <= this.platformYPositionRange.max;
+    if (!yUpOk && !yDownOk) {
+      console.log("calculate again");
+      this.calculatePlatformYPosition();
+    } else {
+      return yDownOk ? yDown : yUp;
+    }
+  }
+
   spawn(x: number, y: number, width: number) {
-    // notes
-    //   the longer a player stays in:
-    //     + platform x/y distance
-    //       (figure out high/low tolerance limits)
     const platformSprite = this.scene.physics.add.sprite(x, y, this.texture);
     platformSprite.setImmovable(true);
     platformSprite.setVelocityX(-this.currentSpeed);
@@ -72,8 +87,16 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     const yUp = currentPlatformY - nextPlatformYDistance;
     const yDown = currentPlatformY + nextPlatformYDistance;
     const yUpOk = yUp >= this.platformYPositionRange.min;
-    const yDownOk = yUp <= this.platformYPositionRange.max;
+    const yDownOk = yDown <= this.platformYPositionRange.max;
+    // doesn't check downOk and it should
+    // move the position calculation logic out into another method
+    // and use prevPlatformYPosition instead of nextPlatformYPosition
+    // then we can get a new number if !upOk && !downOk
     const nextPlatformYPosition = yUpOk ? yUp : yDown;
+
+    // new method, not ready yet 
+    // console.log("platformYPosition", this.calculatePlatformYPosition());
+
     // console.log("platform", {
     //   currentPlatformY: currentPlatformY,
     //   nextPlatformYDistance: nextPlatformYDistance,
@@ -90,8 +113,6 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     let updateSpeed: boolean = false;
     if (!(timer % 10)) {
       const speed = this.startSpeed + timer;
-      // console.log("speed", speed);
-      // console.log("this.currentSpeed", this.currentSpeed);
       if (this.currentSpeed !== speed) {
         this.currentSpeed = speed;
         updateSpeed = true;

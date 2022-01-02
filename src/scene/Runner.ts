@@ -36,7 +36,6 @@ export class Runner extends Phaser.Scene {
     );
     this.platformHandler = new PlatformHandler(
       this,
-      // <number>this.game.config.width,
       this.hero.sprite.height,
       this.hero.jumpHeight,
       this.hero.jumpTime
