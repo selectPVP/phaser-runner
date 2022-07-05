@@ -7,11 +7,11 @@ interface StartData {
 }
 
 export class Start extends Phaser.Scene {
-  startData: StartData;
+  startData?: StartData;
   previousScore: number | undefined;
-  textSize: number;
-  titleText: string;
-  buttonText: string;
+  textSize: number = 16;
+  titleText: string = "wtf";
+  buttonText: string = "go";
   title: Phaser.GameObjects.Text;
   button: Phaser.GameObjects.Text;
   hint: Phaser.GameObjects.Text;
@@ -32,9 +32,16 @@ export class Start extends Phaser.Scene {
 
     const scoreText: string = `you scored ${this.previousScore}!`;
 
+    const logo = this.add.image(
+      <number>this.game.config.width * 0.5,
+      <number>this.game.config.height * 0.2,
+      "logo"
+    );
+    logo.setDisplaySize(300, 156);
+
     this.title = this.add.text(
       0,
-      <number>this.game.config.height / 4,
+      <number>this.game.config.height * 0.4,
       this.previousScore ? scoreText : this.titleText,
       {
         color: "#ff00ff",
@@ -45,7 +52,7 @@ export class Start extends Phaser.Scene {
     );
     this.button = this.add.text(
       0,
-      <number>this.game.config.height / 2,
+      <number>this.game.config.height * 0.65,
       this.buttonText,
       {
         color: "#fff",
@@ -61,12 +68,12 @@ export class Start extends Phaser.Scene {
     );
     this.hint = this.add.text(
       0,
-      (<number>this.game.config.height / 4) * 3,
+      <number>this.game.config.height * 0.9,
       "tap or click to jump",
       {
         color: "#0f0",
         align: "center",
-        fontSize: `${this.textSize}px`,
+        fontSize: `${this.textSize * 0.75}px`,
         fixedWidth: <number>this.game.config.width,
       }
     );

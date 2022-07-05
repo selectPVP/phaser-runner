@@ -1,9 +1,10 @@
 import { TextureKeys, SceneKeys } from "../enums";
 import { platformTextures } from "../texture/platform";
 
-const url_sprite_hero_run = require("../../static/hero_run.png");
-const url_sprite_hero_jump = require("../../static/hero_jump.png");
-const url_sprite_hero_jump_double = require("../../static/hero_jump_double.png");
+import url_sprite_hero_run from "/static/hero_run.png";
+import url_sprite_hero_jump from "/static/hero_jump.png";
+import url_sprite_hero_jump_double from "/static/hero_jump_double.png";
+import url_logo from "/static/logo.png";
 
 export class Preloader extends Phaser.Scene {
   constructor() {
@@ -18,6 +19,8 @@ export class Preloader extends Phaser.Scene {
       pixelWidth: pixelSize,
       palette: palette,
     });
+
+    this.load.image("logo", url_logo);
 
     this.load.spritesheet({
       key: "hero_jump",
