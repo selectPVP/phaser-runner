@@ -148,13 +148,13 @@ export class PlatformHandler extends Phaser.GameObjects.Group {
     );
     // why tho
     if (minDistance > this.nextPlatformXDistance) {
-      console.log("platforms", platforms);
+      // console.log("platforms", platforms);
       // platforms should get shorter over time
       const nextPlatformWidth = Phaser.Math.Between(
         this.platformWidthRange.min,
         this.platformWidthRange.max
       );
-      console.log("this.nextPlatformXDistance", this.nextPlatformXDistance);
+      // console.log("this.nextPlatformXDistance", this.nextPlatformXDistance);
       this.spawn(
         <number>this.scene.game.config.width + nextPlatformWidth / 2,
         this.nextPlatformYPosition,
