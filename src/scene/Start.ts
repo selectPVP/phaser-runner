@@ -32,6 +32,24 @@ export class Start extends Phaser.Scene {
 
     const scoreText: string = `you scored ${this.previousScore}!`;
 
+    const highScore = parseInt(localStorage.getItem("highScore") ?? "0") || 0;
+
+    if (this.previousScore && this.previousScore > highScore) {
+      this.add.text(
+        0,
+        <number>this.game.config.height * 0.45,
+        "new high score!",
+        {
+          color: "#ff0",
+          align: "center",
+          fontSize: `${this.textSize * 0.75}px`,
+          fixedWidth: <number>this.game.config.width,
+        }
+      );
+
+      localStorage.setItem("highScore", this.previousScore.toString());
+    }
+
     const logo = this.add.image(
       <number>this.game.config.width * 0.5,
       <number>this.game.config.height * 0.2,
