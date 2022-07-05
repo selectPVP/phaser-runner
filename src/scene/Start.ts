@@ -1,5 +1,4 @@
-import { TextureKeys, SceneKeys } from '../enums';
-import { TestSprite } from '../TestSprite';
+import { TextureKeys, SceneKeys } from "../enums";
 
 interface StartData {
   score?: number;
@@ -22,11 +21,14 @@ export class Start extends Phaser.Scene {
   }
 
   create() {
-    this.textSize = Math.max(16, Math.round(<number>this.game.config.width / 20));
+    this.textSize = Math.max(
+      16,
+      Math.round(<number>this.game.config.width / 20)
+    );
     this.startData = this.scene.settings.data;
     this.previousScore = this.startData?.score;
-    this.titleText = this.startData?.titleText || 'wtf';
-    this.buttonText = this.startData?.buttonText || 'go';
+    this.titleText = this.startData?.titleText || "wtf";
+    this.buttonText = this.startData?.buttonText || "go";
 
     const scoreText: string = `you scored ${this.previousScore}!`;
 
@@ -35,8 +37,8 @@ export class Start extends Phaser.Scene {
       <number>this.game.config.height / 4,
       this.previousScore ? scoreText : this.titleText,
       {
-        color: '#ff00ff',
-        align: 'center',
+        color: "#ff00ff",
+        align: "center",
         fontSize: `${this.textSize}px`,
         fixedWidth: <number>this.game.config.width,
       }
@@ -46,13 +48,13 @@ export class Start extends Phaser.Scene {
       <number>this.game.config.height / 2,
       this.buttonText,
       {
-        color: '#fff',
-        align: 'center',
+        color: "#fff",
+        align: "center",
         fontSize: `${this.textSize}px`,
         fixedWidth: <number>this.game.config.width,
       }
     );
-    this.button.setInteractive().on('pointerdown', () =>
+    this.button.setInteractive().on("pointerdown", () =>
       this.scene.start(SceneKeys.Runner, {
         time: this.time.now,
       })
@@ -62,8 +64,8 @@ export class Start extends Phaser.Scene {
       (<number>this.game.config.height / 4) * 3,
       "tap or click to jump",
       {
-        color: '#0f0',
-        align: 'center',
+        color: "#0f0",
+        align: "center",
         fontSize: `${this.textSize}px`,
         fixedWidth: <number>this.game.config.width,
       }

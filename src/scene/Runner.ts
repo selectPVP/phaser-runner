@@ -1,6 +1,6 @@
-import { SceneKeys } from '../enums';
-import { Hero } from '../Hero';
-import { PlatformHandler } from '../Platform';
+import { SceneKeys } from "../enums";
+import { Hero } from "../Hero";
+import { PlatformHandler } from "../Platform";
 
 export class Runner extends Phaser.Scene {
   startData: { time?: number };
@@ -24,7 +24,7 @@ export class Runner extends Phaser.Scene {
     this.startTime = this.startData?.time || this.time.now;
     this.scoreText = `Score: ${this.score}`;
     this.scoreBoard = this.add.text(5, 5, this.scoreText, {
-      color: '#0f0',
+      color: "#0f0",
     });
     this.hero = new Hero(
       this,
@@ -52,8 +52,8 @@ export class Runner extends Phaser.Scene {
     if (this.hero.sprite.y > this.game.config.height) {
       this.scene.start(SceneKeys.Start, {
         score: this.score,
-        titleText: 'you died!',
-        buttonText: 'try again',
+        titleText: "you died!",
+        buttonText: "try again",
       });
       this.scene.stop(SceneKeys.Runner);
     } else {

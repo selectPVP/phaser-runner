@@ -12,14 +12,18 @@ const runnerConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: square_size,
   height: square_size,
+  parent: "game",
   scene: [Preloader, Start, Runner],
   physics: {
     default: "arcade",
     arcade: {
-      debug: false
-    }
+      debug: false,
+    },
   },
-  parent: "game",
+  render: {
+    pixelArt: true,
+    antialias: false,
+  },
   scale: {
     parent: "game",
     mode: Phaser.Scale.FIT,

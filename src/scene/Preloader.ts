@@ -39,7 +39,7 @@ export class Preloader extends Phaser.Scene {
       frameConfig: {
         frameWidth: 32,
         startFrame: 0,
-        endFrame: -1
+        endFrame: -1,
       },
     });
   }

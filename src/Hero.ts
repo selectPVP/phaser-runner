@@ -23,7 +23,7 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
     this.jumpForce = jumpForce;
     this.jumpsAllowed = jumpsAllowed;
     this.sprite = this.scene.physics.add.sprite(x, y, texture);
-    this.sprite.setDebug(true, true, 255)
+    this.sprite.setDebug(true, true, 255);
     this.sprite.anims.create({
       key: "run",
       frames: this.sprite.anims.generateFrameNumbers("hero_run", {}),
@@ -50,7 +50,8 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
   calculateJumpParameters() {
     const timeToPeak = this.jumpForce / this.gravity;
     this.jumpHeight =
-    this.jumpForce * timeToPeak - (this.gravity * Math.pow(timeToPeak, 2)) / 2;
+      this.jumpForce * timeToPeak -
+      (this.gravity * Math.pow(timeToPeak, 2)) / 2;
     this.jumpTime = 2 * timeToPeak;
   }
 
