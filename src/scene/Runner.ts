@@ -3,53 +3,80 @@ import { Hero } from "../Hero";
 import { PlatformHandler } from "../Platform";
 
 export class Runner extends Phaser.Scene {
-  startData: { time?: number };
-  startTime: number;
+  startData!: { time?: number };
+  startTime!: number;
   timer: number = 0;
   bonus: number = 0;
   score: number = 0;
-  scoreText: string;
-  scoreBoard: Phaser.GameObjects.Text;
+  scoreText!: string;
+  scoreBoard!: Phaser.GameObjects.Text;
   gravity: number = 800;
   jumpForce: number = 500;
   jumpsAllowed: number = 2;
-  platformHandler: PlatformHandler;
-  hero: Hero;
+  platformHandler!: PlatformHandler;
+  hero!: Hero;
 
   constructor() {
     super(SceneKeys.Runner);
   }
+
   create() {
     this.startData = this.scene.settings.data;
     this.startTime = this.startData?.time || this.time.now;
+this.add.image(0, 0, "background")
+  .setOrigin(0)
+  .setScrollFactor(0)
+  .setDisplaySize(this.game.config.width as number, this.game.config.height as number);
     this.scoreText = `Score: ${this.score}`;
     this.scoreBoard = this.add.text(5, 5, this.scoreText, {
       color: "#0f0",
     });
+
     this.hero = new Hero(
       this,
-      <number>this.game.config.width / 3,
-      <number>this.game.config.height / 2,
+      this.game.config.width as number / 3,
+      this.game.config.height as number / 2,
       this.gravity,
       this.jumpForce,
       this.jumpsAllowed
     );
+
     this.platformHandler = new PlatformHandler(
       this,
       this.hero.sprite.height,
       this.hero.jumpHeight,
       this.hero.jumpTime
     );
+    // Spawn first platform
     this.platformHandler.spawn(
-      <number>this.game.config.width,
-      <number>this.game.config.height * 0.8,
-      <number>this.game.config.width
+      this.game.config.width as number,
+      this.game.config.height as number * 0.8,
+      this.game.config.width as number
     );
-    this.physics.add.collider(this.hero.sprite, this.platformHandler);
+
+    // 🟩 Collision with platforms
+    this.physics.add.collider(
+      this.hero.sprite,
+      this.platformHandler.getChildren() as Phaser.GameObjects.GameObject[]
+    );
+
+    // 🟥 Overlap with flying rugs (deadly)
+    this.physics.add.overlap(
+      this.hero.sprite,
+      this.platformHandler.flyingRugGroup,
+      () => {
+        this.scene.start(SceneKeys.Start, {
+          score: this.score,
+          titleText: "you touched the cursed rug!",
+          buttonText: "try again",
+        });
+        this.scene.stop(SceneKeys.Runner);
+      }
+    );
   }
 
   update() {
-    if (this.hero.sprite.y > this.game.config.height) {
+    if (this.hero.sprite.y > (this.game.config.height as number)) {
       this.scene.start(SceneKeys.Start, {
         score: this.score,
         titleText: "you died!",
@@ -61,6 +88,7 @@ export class Runner extends Phaser.Scene {
       this.score = this.timer + this.bonus;
       this.scoreText = `Score: ${this.score}`;
       this.scoreBoard.setText(this.scoreText);
+
       this.platformHandler.update(this.timer);
       this.hero.handleAnimation();
     }
