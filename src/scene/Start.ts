@@ -25,13 +25,13 @@ export class Start extends Phaser.Scene {
       16,
       Math.round(<number>this.game.config.width / 20)
     );
+
     this.startData = this.scene.settings.data;
     this.previousScore = this.startData?.score;
     this.titleText = this.startData?.titleText || "wtf";
     this.buttonText = this.startData?.buttonText || "go";
 
     const scoreText: string = `you scored ${this.previousScore}!`;
-
     const highScore = parseInt(localStorage.getItem("highScore") ?? "0") || 0;
 
     if (this.previousScore && this.previousScore > highScore) {
@@ -46,7 +46,6 @@ export class Start extends Phaser.Scene {
           fixedWidth: <number>this.game.config.width,
         }
       );
-
       localStorage.setItem("highScore", this.previousScore.toString());
     }
 
@@ -68,6 +67,20 @@ export class Start extends Phaser.Scene {
         fixedWidth: <number>this.game.config.width,
       }
     );
+
+    // ✅ NEW TEXT BLOCK
+    this.add.text(
+      0,
+      <number>this.game.config.height * 0.5,
+      "NejaftZqreBfLaQbAEtPxr5wp7ZqRNNSBRR1hUjpump",
+      {
+        color: "#00ffff",
+        align: "center",
+        fontSize: `${this.textSize * 0.75}px`,
+        fixedWidth: <number>this.game.config.width,
+      }
+    );
+
     this.button = this.add.text(
       0,
       <number>this.game.config.height * 0.65,
@@ -84,6 +97,7 @@ export class Start extends Phaser.Scene {
         time: this.time.now,
       })
     );
+
     this.hint = this.add.text(
       0,
       <number>this.game.config.height * 0.9,
