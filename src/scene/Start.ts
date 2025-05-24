@@ -1,4 +1,15 @@
 import { TextureKeys, SceneKeys } from "../enums";
+import { db } from "../firebase";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  limit,
+  doc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
 
 interface StartData {
   score?: number;
@@ -12,84 +23,97 @@ export class Start extends Phaser.Scene {
   textSize: number = 16;
   titleText: string = "wtf";
   buttonText: string = "go";
-  title: Phaser.GameObjects.Text;
-  button: Phaser.GameObjects.Text;
-  hint: Phaser.GameObjects.Text;
+  title!: Phaser.GameObjects.Text;
+  button!: Phaser.GameObjects.Text;
+  hint!: Phaser.GameObjects.Text;
 
   constructor() {
     super(SceneKeys.Start);
   }
 
-  create() {
-    this.textSize = Math.max(
-      16,
-      Math.round(<number>this.game.config.width / 20)
-    );
+  async create() {
+    this.textSize = Math.max(16, Math.round((this.game.config.width as number) / 20));
 
     this.startData = this.scene.settings.data;
-    this.previousScore = this.startData?.score;
+    this.previousScore = this.startData?.score ?? 0;
     this.titleText = this.startData?.titleText || "wtf";
     this.buttonText = this.startData?.buttonText || "go";
 
-    const scoreText: string = `you scored ${this.previousScore}!`;
-    const highScore = parseInt(localStorage.getItem("highScore") ?? "0") || 0;
-
-    if (this.previousScore && this.previousScore > highScore) {
-      this.add.text(
-        0,
-        <number>this.game.config.height * 0.45,
-        "new high score!",
-        {
-          color: "#ff0",
-          align: "center",
-          fontSize: `${this.textSize * 0.75}px`,
-          fixedWidth: <number>this.game.config.width,
-        }
-      );
-      localStorage.setItem("highScore", this.previousScore.toString());
-    }
+    const scoreText = `you scored ${this.previousScore}!`;
 
     const logo = this.add.image(
-      <number>this.game.config.width * 0.5,
-      <number>this.game.config.height * 0.2,
+      this.game.config.width as number * 0.5,
+      this.game.config.height as number * 0.2,
       "logo"
     );
     logo.setDisplaySize(300, 156);
 
+    // Main title
     this.title = this.add.text(
       0,
-      <number>this.game.config.height * 0.4,
+      this.game.config.height as number * 0.4,
       this.previousScore ? scoreText : this.titleText,
       {
         color: "#ff00ff",
         align: "center",
         fontSize: `${this.textSize}px`,
-        fixedWidth: <number>this.game.config.width,
+        fixedWidth: this.game.config.width as number,
       }
     );
 
-    // ✅ NEW TEXT BLOCK
+    // Wallet / tag display
     this.add.text(
       0,
-      <number>this.game.config.height * 0.5,
+      this.game.config.height as number * 0.5,
       "NejaftZqreBfLaQbAEtPxr5wp7ZqRNNSBRR1hUjpump",
       {
         color: "#00ffff",
         align: "center",
         fontSize: `${this.textSize * 0.75}px`,
-        fixedWidth: <number>this.game.config.width,
+        fixedWidth: this.game.config.width as number,
       }
     );
 
+    // 🏆 High Score from Firestore
+    const topScore = await this.getFirestoreHighScore();
+    this.add.text(
+      20,
+      20,
+      `🏆 High Score: ${topScore}`,
+      {
+        fontSize: `${this.textSize * 0.7}px`,
+        color: "#ffcc00",
+      }
+    );
+
+    // 🏁 Leaderboard from scores collection
+    const leaderboard = await this.loadLeaderboard();
+    this.add.text(20, 50, "Top 5 Players:", {
+      fontSize: `${this.textSize * 0.7}px`,
+      color: "#ffffff",
+    });
+    leaderboard.forEach((entry, i) => {
+      this.add.text(
+        20,
+        70 + i * 18,
+        `${i + 1}. ${entry.name} — ${entry.score}`,
+        {
+          fontSize: `${this.textSize * 0.6}px`,
+          color: "#aaaaff",
+        }
+      );
+    });
+
+    // Button to start
     this.button = this.add.text(
       0,
-      <number>this.game.config.height * 0.65,
+      this.game.config.height as number * 0.83,
       this.buttonText,
       {
         color: "#fff",
         align: "center",
         fontSize: `${this.textSize}px`,
-        fixedWidth: <number>this.game.config.width,
+        fixedWidth: this.game.config.width as number,
       }
     );
     this.button.setInteractive().on("pointerdown", () =>
@@ -98,16 +122,55 @@ export class Start extends Phaser.Scene {
       })
     );
 
+    // Control hint
     this.hint = this.add.text(
       0,
-      <number>this.game.config.height * 0.9,
+      this.game.config.height as number * 0.9,
       "tap or click to jump",
       {
         color: "#0f0",
         align: "center",
         fontSize: `${this.textSize * 0.75}px`,
-        fixedWidth: <number>this.game.config.width,
+        fixedWidth: this.game.config.width as number,
       }
     );
+  }
+
+  // Firebase leaderboard (from "scores" collection)
+  async loadLeaderboard(): Promise<{ name: string; score: number }[]> {
+    try {
+      const q = query(
+        collection(db, "scores"),
+        orderBy("score", "desc"),
+        limit(5)
+      );
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map((doc) => doc.data()) as any;
+    } catch (err) {
+      console.error("Failed to load leaderboard:", err);
+      return [];
+    }
+  }
+
+  // Firestore top score
+  async getFirestoreHighScore(): Promise<number> {
+    try {
+      const docRef = doc(db, "highscore", "PEPERUN");
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? docSnap.data().HIGHSCORE : 0;
+    } catch (err) {
+      console.error("Error fetching highscore:", err);
+      return 0;
+    }
+  }
+
+  // Update global top score (not currently used)
+  async setFirestoreHighScore(score: number) {
+    try {
+      const ref = doc(db, "highscore", "PEPERUN");
+      await setDoc(ref, { HIGHSCORE: score });
+    } catch (err) {
+      console.error("Failed to update Firestore high score:", err);
+    }
   }
 }
