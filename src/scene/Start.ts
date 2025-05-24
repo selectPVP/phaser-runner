@@ -62,17 +62,17 @@ export class Start extends Phaser.Scene {
     );
 
     // Wallet / tag display
-    this.add.text(
-      0,
-      this.game.config.height as number * 0.5,
-      "NejaftZqreBfLaQbAEtPxr5wp7ZqRNNSBRR1hUjpump",
-      {
-        color: "#00ffff",
-        align: "center",
-        fontSize: `${this.textSize * 0.75}px`,
-        fixedWidth: this.game.config.width as number,
-      }
-    );
+    // this.add.text(
+    //   0,
+    //   this.game.config.height as number * 0.5,
+    //   "NejaftZqreBfLaQbAEtPxr5wp7ZqRNNSBRR1hUjpump",
+    //   {
+    //     color: "#00ffff",
+    //     align: "center",
+    //     fontSize: `${this.textSize * 0.75}px`,
+    //     fixedWidth: this.game.config.width as number,
+    //   }
+    // );
 
     // // 🏆 High Score from Firestore
     // const topScore = await this.getFirestoreHighScore();
@@ -87,22 +87,22 @@ export class Start extends Phaser.Scene {
     // );
 
     // 🏁 Leaderboard from scores collection
-    const leaderboard = await this.loadLeaderboard();
-    this.add.text(20, 50, "Top 5 Players:", {
-      fontSize: `${this.textSize * 0.7}px`,
-      color: "#ffffff",
-    });
-    leaderboard.forEach((entry, i) => {
-      this.add.text(
-        20,
-        70 + i * 18,
-        `${i + 1}. ${entry.name} — ${entry.score}`,
-        {
-          fontSize: `${this.textSize * 0.6}px`,
-          color: "#aaaaff",
-        }
-      );
-    });
+    // const leaderboard = await this.loadLeaderboard();
+    // this.add.text(20, 50, "Top 5 Players:", {
+    //   fontSize: `${this.textSize * 0.7}px`,
+    //   color: "#ffffff",
+    // });
+    // leaderboard.forEach((entry, i) => {
+    //   this.add.text(
+    //     20,
+    //     70 + i * 18,
+    //     `${i + 1}. ${entry.name} — ${entry.score}`,
+    //     {
+    //       fontSize: `${this.textSize * 0.6}px`,
+    //       color: "#aaaaff",
+    //     }
+    //   );
+    // });
 
     // Button to start
     this.button = this.add.text(
