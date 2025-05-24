@@ -74,17 +74,17 @@ export class Start extends Phaser.Scene {
       }
     );
 
-    // 🏆 High Score from Firestore
-    const topScore = await this.getFirestoreHighScore();
-    this.add.text(
-      20,
-      20,
-      `🏆 High Score: ${topScore}`,
-      {
-        fontSize: `${this.textSize * 0.7}px`,
-        color: "#ffcc00",
-      }
-    );
+    // // 🏆 High Score from Firestore
+    // const topScore = await this.getFirestoreHighScore();
+    // this.add.text(
+    //   20,
+    //   20,
+    //   `🏆 High Score: ${topScore}`,
+    //   {
+    //     fontSize: `${this.textSize * 0.7}px`,
+    //     color: "#ffcc00",
+    //   }
+    // );
 
     // 🏁 Leaderboard from scores collection
     const leaderboard = await this.loadLeaderboard();
