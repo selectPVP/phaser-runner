@@ -2,9 +2,9 @@ import { TextureKeys, SceneKeys } from "../enums";
 import { platformTextures } from "../texture/platform";
 
 
-import url_sprite_hero_run from "/static/hero_run.png";
-import url_sprite_hero_jump from "/static/hero_jump.png";
-import url_sprite_hero_jump_double from "/static/hero_jump_double.png";
+import url_sprite_pepe_run from "/static/pepe_run.png";
+import url_sprite_pepe_jump from "/static/pepe_jump.png";
+import url_sprite_pepe_jump_2 from "/static/pepe_jump_2.png";
 import url_logo from "/static/logo.png";
 import url_bg from "/static/rgrush.png";
 
@@ -26,22 +26,22 @@ export class Preloader extends Phaser.Scene {
     this.load.image("background", url_bg);
 
     this.load.spritesheet({
-      key: "hero_jump",
-      url: url_sprite_hero_jump,
+      key: "pepe_jump_2",
+      url: url_sprite_pepe_jump_2,
       frameConfig: {
         frameWidth: 32,
       },
     });
     this.load.spritesheet({
-      key: "hero_jump_double",
-      url: url_sprite_hero_jump_double,
+      key: "pepe_jump",
+      url: url_sprite_pepe_jump,
       frameConfig: {
         frameWidth: 32,
       },
     });
     this.load.spritesheet({
-      key: "hero_run",
-      url: url_sprite_hero_run,
+      key: "pepe_run",
+      url: url_sprite_pepe_run,
       frameConfig: {
         frameWidth: 32,
         startFrame: 0,

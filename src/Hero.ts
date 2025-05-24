@@ -16,7 +16,7 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
     gravity: number,
     jumpForce: number,
     jumpsAllowed: number,
-    texture = "hero_run"
+    texture = "pepe_run"
   ) {
     super(scene, x, y, texture);
     this.gravity = gravity;
@@ -26,19 +26,19 @@ export class Hero extends Phaser.Physics.Arcade.Sprite {
     this.sprite.setDebug(true, true, 255);
     this.sprite.anims.create({
       key: "run",
-      frames: this.sprite.anims.generateFrameNumbers("hero_run", {}),
+      frames: this.sprite.anims.generateFrameNumbers("pepe_run", {}),
       frameRate: 20,
       repeat: -1,
     });
     this.sprite.anims.create({
       key: "jump",
-      frames: this.sprite.anims.generateFrameNumbers("hero_jump", {}),
+      frames: this.sprite.anims.generateFrameNumbers("pepe_jump", {}),
       frameRate: 20,
       repeat: -1,
     });
     this.sprite.anims.create({
       key: "jump_double",
-      frames: this.sprite.anims.generateFrameNumbers("hero_jump_double", {}),
+      frames: this.sprite.anims.generateFrameNumbers("pepe_jump_2", {}),
       frameRate: 20,
       repeat: -1,
     });
