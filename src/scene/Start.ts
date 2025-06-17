@@ -75,7 +75,7 @@ export class Start extends Phaser.Scene {
     this.add.text(
       0,
       this.game.config.height as number * 0.5,
-      "CA: H5z3EG4McDDNovVCtUKquk5yd3TNLqwnPc5peVLopump",
+      "CA:",
       {
         color: "#00ffff",
         align: "center",
