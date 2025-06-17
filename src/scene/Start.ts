@@ -32,6 +32,16 @@ export class Start extends Phaser.Scene {
   }
 
   async create() {
+    // Test Firebase connection
+    try {
+      console.log("🔥 Testing Firebase connection...");
+      const testQuery = query(collection(db, "pepscores"), limit(1));
+      const testSnapshot = await getDocs(testQuery);
+      console.log("✅ Firebase connection successful!");
+    } catch (err) {
+      console.error("❌ Firebase connection failed:", err);
+    }
+
     this.textSize = Math.max(16, Math.round((this.game.config.width as number) / 20));
 
     this.startData = this.scene.settings.data;
@@ -65,7 +75,7 @@ export class Start extends Phaser.Scene {
     this.add.text(
       0,
       this.game.config.height as number * 0.5,
-      "NejaftZqreBfLaQbAEtPxr5wp7ZqRNNSBRR1hUjpump",
+      "",
       {
         color: "#00ffff",
         align: "center",
@@ -136,18 +146,25 @@ export class Start extends Phaser.Scene {
     );
   }
 
-  // Firebase leaderboard (from "scores" collection)
+  // Firebase leaderboard (from "pepscores" collection)
   async loadLeaderboard(): Promise<{ name: string; score: number }[]> {
     try {
+      console.log("🔍 Loading leaderboard from Firebase...");
       const q = query(
-        collection(db, "scores"),
+        collection(db, "pepscores"),
         orderBy("score", "desc"),
         limit(5)
       );
       const snapshot = await getDocs(q);
+      console.log("📊 Leaderboard data:", snapshot.docs.map(doc => doc.data()));
       return snapshot.docs.map((doc) => doc.data()) as any;
     } catch (err) {
-      console.error("Failed to load leaderboard:", err);
+      console.error("❌ Failed to load leaderboard:", err);
+      // Add more detailed error information
+      if (err instanceof Error) {
+        console.error("Error details:", err.message);
+        console.error("Error stack:", err.stack);
+      }
       return [];
     }
   }

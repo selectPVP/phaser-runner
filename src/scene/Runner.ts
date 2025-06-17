@@ -93,15 +93,20 @@ export class Runner extends Phaser.Scene {
     const name = prompt("You died! Enter your name:");
     if (name) {
       try {
-        console.log("Submitting to Firestore:", name, this.score);
-        await addDoc(collection(db, "scores"), {
+        console.log("🚀 Submitting to Firestore:", { name, score: this.score });
+        const docRef = await addDoc(collection(db, "pepscores"), {
           name,
           score: this.score,
           createdAt: new Date()
         });
-        console.log("✅ Score submitted to Firebase!");
+        console.log("✅ Score submitted to Firebase! Document ID:", docRef.id);
       } catch (err) {
         console.error("❌ Failed to submit score:", err);
+        // Add more detailed error information
+        if (err instanceof Error) {
+          console.error("Error details:", err.message);
+          console.error("Error stack:", err.stack);
+        }
       }
     }
 
